@@ -1,0 +1,10 @@
+<< COMMENT
+xsetroot -cursor_name left_ptr &
+layout-auto &
+lxsession &
+xscreensaver -no-splash &
+nm-applet &
+flameshot &
+
+# xflux -l 55.79 -g 37.71 &
+COMMENT
