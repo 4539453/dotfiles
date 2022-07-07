@@ -1,0 +1,44 @@
+
+Config { font = "xft:Ubuntu:weight=bold:pixelsize=14:antialias=true:hinting=true"
+  , additionalFonts = [
+      "xft:Mononoki:pixelsize=14:antialias=true:hinting=true"
+    , "xft:Font Awesome 6 Free Solid:pixelsize=12"
+    , "xft:Font Awesome 6 Brands:pixelsize=12"
+                      ]
+  , bgColor      = "#003049"
+  , fgColor      = "#ff6c65"
+  , alpha        = 230
+  -- Position TopSize and BottomSize take 3 arguments:
+  --   an alignment parameter (L/R/C) for Left, Right or Center.
+  --   an integer for the percentage width, so 100 would be 100%.
+  --   an integer for the minimum pixel height for xmobar, so 29 would force a height of at least 29 pixels.
+  --   NOTE: The height should be the same as the trayer (system tray) height.
+  , position     = TopSize L 100 27
+  , lowerOnStart = True
+  , hideOnStart  = False
+  , allDesktops  = True
+  , persistent   = True
+  , commands = [
+
+    Run Cpu ["-t","<fn=2>\xf2db</fn> <total>%","-H","50","--high","red", "-w","3", "-c","0"] 20
+
+      -- Ram used number and percent
+    , Run Memory ["-t", "<fn=2>\xf538</fn> <used>M", "-w","5", "-c","0"] 20
+
+      -- keyboard layout indicator
+    , Run Kbd [("us", "<fc=#dfdfdf>US</fc>"), ("ru", "<fc=#dfdfdf>RU</fc>")]
+
+      -- Time and date https://man.archlinux.org/man/strftime.3
+    -- , Run Date "<fn=2>\xf017</fn> %a %d %b • %r" "date" 10
+    , Run Date "%a %d %b • %r" "date" 10
+
+      -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
+    , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
+
+      -- Prints out the left side items such as workspaces, layout, etc.
+    , Run UnsafeStdinReader
+    ]
+  , sepChar = "%"
+  , alignSep = "}{"
+  , template = "      %UnsafeStdinReader% }<action=`xkb-switch -n`>%kbd%</action> <fc=#dfdfdf>•</fc> <fc=#dfdfdf><action=`alacritty -e calcurse`>%date%</action></fc> {<fc=#dfdfdf><action=`alacritty -e htop`>%cpu%</action></fc>    <fc=#dfdfdf><action=`alacritty -e htop`>%memory%</action></fc> %trayerpad%"
+  }

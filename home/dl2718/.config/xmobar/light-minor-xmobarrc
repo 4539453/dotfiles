@@ -1,0 +1,41 @@
+
+Config { font = "xft:Comfortaa:weight=bold:pixelsize=15:antialias=true:hinting=true"
+  , additionalFonts = [
+      "xft:Monospace:pixelsize=12:antialias=true:hinting=true"
+    , "xft:Font Awesome 6 Free Solid:pixelsize=12"
+    , "xft:Font Awesome 6 Brands:pixelsize=12"
+                      ]
+  , bgColor      = "#fdf6e3"
+  , fgColor      = "#000000"
+  , alpha        = 250
+  -- Position TopSize and BottomSize take 3 arguments:
+  --   an alignment parameter (L/R/C) for Left, Right or Center.
+  --   an integer for the percentage width, so 100 would be 100%.
+  --   an integer for the minimum pixel height for xmobar, so 29 would force a height of at least 29 pixels.
+  --   NOTE: The height should be the same as the trayer (system tray) height.
+  , position     = TopSize L 100 27
+  , lowerOnStart = True
+  , hideOnStart  = False
+  , allDesktops  = True
+  , persistent   = True
+  , commands = [
+
+    Run Cpu ["-t","<fn=2>\xf2db</fn> <total>%","-H","50","--high","red", "-w","3", "-c","0"] 20
+
+      -- Ram used number and percent
+    , Run Memory ["-t", "<fn=2>\xf538</fn> <used>M", "-w","5", "-c","0"] 20
+
+      -- keyboard layout indicator
+    , Run Kbd [("us", "<fc=#000000>US</fc>"), ("ru", "<fc=#000000>RU</fc>")]
+
+      -- Time and date https://man.archlinux.org/man/strftime.3
+    , Run Date "<fn=2>\xf017</fn> %a %d %b • %r" "date" 10
+    -- , Run Date "%a %d %b • %r" "date" 10
+
+      -- Prints out the left side items such as workspaces, layout, etc.
+    , Run UnsafeStdinReader
+    ]
+  , sepChar = "%"
+  , alignSep = "}{"
+  , template = "    %UnsafeStdinReader% }{    <action=`xkb-switch -n`>%kbd%</action>    <fc=#000000><action=`alacritty -e calcurse`>%date%</action></fc>    <fc=#000000><action=`alacritty -e htop`>%cpu%</action></fc>    <fc=#000000><action=`alacritty -e htop`>%memory%</action></fc>    "
+  }
