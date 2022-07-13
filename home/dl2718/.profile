@@ -10,6 +10,9 @@ if ruby -v 2>/dev/null>/dev/null; then
     export PATH="$PATH:$GEM_HOME/bin"
 fi
 
+## GnuPG
+export GPG_TTY=$(tty)
+
 ## Home
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
