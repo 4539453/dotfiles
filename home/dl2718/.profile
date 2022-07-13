@@ -10,12 +10,14 @@ if ruby -v 2>/dev/null>/dev/null; then
     export PATH="$PATH:$GEM_HOME/bin"
 fi
 
-## GnuPG
-export GPG_TTY=$(tty)
-
 ## Home
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
+
+# VARS
+
+## GnuPG
+export GPG_TTY=$(tty)
 
 ## Editor
 if vim --version 2>/dev/null>/dev/null; then
@@ -23,6 +25,7 @@ if vim --version 2>/dev/null>/dev/null; then
     export EDITOR="$VISUAL"
 fi
 
+## libvirt
 export LIBVIRT_DEFAULT_URI="qemu:///system"
 
 
@@ -36,3 +39,4 @@ if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
     exec xinit xmonad
   fi
 fi
+
