@@ -28,6 +28,8 @@ fi
 ## libvirt
 export LIBVIRT_DEFAULT_URI="qemu:///system"
 
+## paru
+export PARU_CONF=$HOME/.config/paru/paru.conf
 
 # Greeter for xinit
 
