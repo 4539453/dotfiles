@@ -40,5 +40,5 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=14:antialias=true:hinting=true
     ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "      %UnsafeStdinReader% }<action=`xkb-switch -n`>%kbd%</action> <fc=#dfdfdf>•</fc> <fc=#dfdfdf><action=`alacritty -e calcurse`>%date%</action></fc> {<fc=#dfdfdf><action=`alacritty -e htop`>%cpu%</action></fc>    <fc=#dfdfdf><action=`alacritty -e htop`>%memory%</action></fc> %trayerpad%"
+  , template = "      %UnsafeStdinReader% }<action=`xkb-switch -n`>%kbd%</action> <fc=#dfdfdf>•</fc> <fc=#dfdfdf><action=`alacritty -e calcurse`>%date%</action></fc> {<fc=#dfdfdf><action=`alacritty -e btop`>%cpu%</action></fc>    <fc=#dfdfdf><action=`alacritty -e htop`>%memory%</action></fc> %trayerpad%"
   }
