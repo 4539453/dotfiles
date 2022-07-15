@@ -1,0 +1,13 @@
+arch-install-scripts 25-2
+base 2-2
+btrfs-progs 5.18.1-1
+gcc 12.1.0-2
+iwd 1.28-1
+linux 5.18.11.arch1-1
+linux-firmware 20220610.7b71b75-1
+man-db 2.10.2-1
+openssh 9.0p1-1
+sudo 1.9.11.p3-1
+terminus-font 4.49.1-2
+vim 9.0.0000-1
+wget 1.21.3-1
