@@ -25,6 +25,12 @@ if vim --version 2>/dev/null>/dev/null; then
     export EDITOR="$VISUAL"
 fi
 
+## default shell for alacritty
+if fish --version 2>/dev/null>/dev/null && \
+        alacritty --version 2>/dev/null>/dev/null; then
+    export SHELL=/usr/bin/fish alacritty
+fi
+
 ## libvirt
 export LIBVIRT_DEFAULT_URI="qemu:///system"
 
