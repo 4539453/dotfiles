@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+colorscheme="${1:-1}"
+
+if [ "$colorscheme" == "light" ]; then
+  # GTK
+  sed -i "s/^gtk-icon-theme-name=\".*/gtk-icon-theme-name=\"Numix-Light\"/g" "$HOME"/.gtkrc-2.0
+  sed -i "s/^gtk-icon-theme-name=.*/gtk-icon-theme-name=Numix-Light/g" "$HOME"/.config/gtk-3.0/settings.ini
+
+  # VSCode
+  #sed -i "s/^  \"workbench.colorTheme\": \".*/  \"workbench.colorTheme\": \"Code with a tan\",/g" "$HOME"/.config/Code/User/settings.json
+
+elif [ "$colorscheme" == "dark" ]; then
+  # GTK
+  sed -i "s/^gtk-icon-theme-name=\".*/gtk-icon-theme-name=\"Numix\"/g" "$HOME"/.gtkrc-2.0
+  sed -i "s/^gtk-icon-theme-name=.*/gtk-icon-theme-name=Numix/g" "$HOME"/.config/gtk-3.0/settings.ini
+
+  # VSCode
+  #sed -i "s/^  \"workbench.colorTheme\": \".*/  \"workbench.colorTheme\": \"Code with a tan\",/g" "$HOME"/.config/Code/User/settings.json
+fi
+
+if [[ "$colorscheme" == "light" || "$colorscheme" == "dark" ]]; then
+  # Xmonad
+  sed  -i "s/import Theme.*/import Theme.${colorscheme^}/g" "$HOME"/.config/xmonad/xmonad.hs || echo "Cannot modify xmonad.hs"
+  xmonad --restart
+
+  # alacritty
+  sed -i "s+  - \~/.config/alacritty/theme/.*+  - \~/.config/alacritty/theme/$colorscheme.yml+g" "$HOME"/.config/alacritty/alacritty.yml
+
+  # rofi
+  sed -i "s/^@theme \".*/@theme \"$colorscheme\"/g" "$HOME"/.config/rofi/config.rasi
+else
+  echo "Choose light or dark theme." && exit 0
+fi
