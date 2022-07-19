@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+if [ "$(xkb-switch -p)" = 'us' ]; then
+  notify-send "🌍 EN" -t 500
+fi
+if [ "$(xkb-switch -p)" = 'ru' ]; then
+  notify-send '🚀 RU' -t 500
+fi
