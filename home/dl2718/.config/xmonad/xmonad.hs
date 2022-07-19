@@ -83,7 +83,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask        -- Sets modkey to super/windows key
 
 myTerminal :: String
-myTerminal = "alacritty -e fish "    -- Sets default terminal
+myTerminal = "alacritty "    -- Sets default terminal
 
 myBrowser :: String
 myBrowser = "firefox "  -- Sets browser
@@ -118,13 +118,13 @@ myTabTheme = def
 myStartupHook :: X ()
 myStartupHook = do
 --   spawn "killall conky"
-  spawn "killall trayer"
+--   spawn "killall trayer"
 
   spawn ("wallpaper " ++ colorScheme ++ "-solid")
   spawn "picom --experimental-backends --config $HOME/.config/picom/picom.conf"
 --   spawn ("conky -c $HOME/.config/conky/" ++ colorScheme ++ ".conkyrc")
-  spawn ("trayer --edge top --align right --widthtype request --padding 20 --SetDockType true --SetPartialStrut true --expand true --monitor 0 --transparent true --alpha $(expr 255 - $(cat ~/.config/xmobar/" ++ colorScheme ++ "-main-xmobarrc | grep alpha | cut -d = -f2 | cut -d ' ' -f2)) " ++ colorTrayer ++ " --height 27 --iconspacing 4")
-  
+--   spawn ("trayer --edge top --align right --widthtype request --padding 20 --SetDockType true --SetPartialStrut true --expand true --monitor 0 --transparent true --alpha $(expr 255 - $(cat ~/.config/xmobar/" ++ colorScheme ++ "-main-xmobarrc | grep alpha | cut -d = -f2 | cut -d ' ' -f2)) " ++ colorTrayer ++ " --height 27 --iconspacing 4")
+
   setWMName "LG3D"
 
 --------------------------------------------------------------------------------
@@ -155,11 +155,10 @@ myRandrChangeHook = do
 
 myAfterRescreenHook :: X ()
 myAfterRescreenHook = do
-  -- respawn wallpapers
-    spawn ("wallpaper " ++ colorScheme ++ "-solid")
+  spawn ("wallpaper " ++ colorScheme ++ "-solid")
 
 rescreenCfg = def{
---   afterRescreenHook = myAfterRescreenHook,
+  afterRescreenHook = myAfterRescreenHook,
   randrChangeHook = myRandrChangeHook
 }
 
@@ -205,24 +204,24 @@ mirror   = renamed [Replace "mirror"]
            $ Mirror (Tall 2 (3/100) (3/4))
 tabs     = renamed [Replace "tabs"]
            $ tabbed shrinkText myTabTheme
-grid     = renamed [Replace "grid"]
-          --  $ smartBorders
-           $ windowNavigation
-          --  $ addTabs shrinkText myTabTheme
-          --  $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 12
-           $ mySpacing 4
-           $ Grid (16/10)
-floats   = renamed [Replace "floats"]
-          --  $ smartBorders
-           $ limitWindows 20 simplestFloat
+-- grid     = renamed [Replace "grid"]
+--           --  $ smartBorders
+--            $ windowNavigation
+--           --  $ addTabs shrinkText myTabTheme
+--           --  $ subLayout [] (smartBorders Simplest)
+--            $ limitWindows 12
+--            $ mySpacing 4
+--            $ Grid (16/10)
+-- floats   = renamed [Replace "floats"]
+--           --  $ smartBorders
+--            $ limitWindows 20 simplestFloat
 
 -- The layout hook
-myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
+myLayoutHook = avoidStruts $ mouseResize $ windowArrange
                $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
              where
                myDefaultLayout =     withBorder myBorderWidth tall
-                                 ||| grid
+                                --  ||| grid
                                  ||| mirror
                                  ||| noBorders tabs
 
@@ -298,9 +297,6 @@ myKeys =
       ("M-p", spawnRofi "-show drun -show-icons") -- Spawn rofi drun
     , ("M-o", spawnRofi "-show window -show-icons") -- Spawn rofi run
 
-    -- KB_GROUP Run Prompt
-    , ("M-S-<Return>", spawnRofi "-show run")
-
     -- KB_GROUP Useful programs to have a keybinding for launch
     , ("M-<Return>", spawn (myTerminal))
     , ("M-S-l", spawn "xscreensaver-command -lock")
@@ -311,7 +307,7 @@ myKeys =
     , ("M-S-a", killAll)   -- Kill all windows on current workspace
 
     -- KB_GROUP Floating windows
-    , ("M-f", sendMessage (T.Toggle "floats")) -- Toggles my 'floats' layout
+    -- , ("M-f", sendMessage (T.Toggle "floats")) -- Toggles my 'floats' layout
     , ("M-t", withFocused $ windows . W.sink)  -- Push floating window back to tile
     , ("M-S-t", sinkAll)                       -- Push ALL floating windows to tile
 
@@ -320,7 +316,6 @@ myKeys =
     , ("C-g r", spawn (myTerminal ++ "-c lf"))
     , ("C-g f", spawn ("pcmanfm"))
     , ("C-g b", spawn ("obsidian"))
-    , ("C-g n", spawn ("notion-app"))
     , ("C-g c", spawn ("code"))
     , ("C-g t", spawn "telegram-desktop")
 
@@ -382,12 +377,6 @@ myKeys =
 
 main :: IO ()
 main = do
-
-  -- Launching two instances of xmobar on their monitors.
-  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/" ++ colorScheme ++ "-main-xmobarrc")
-  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/" ++ colorScheme ++ "-minor-xmobarrc")
-  -- xmproc2 <- spawnPipe "xmobar -x 2 $HOME/.config/xmobar/xmobarrc"
-  -- the xmonad, ya know...what the WM is named after!
   xmonad $
     docks $
     rescreenHook rescreenCfg $
@@ -406,42 +395,11 @@ main = do
       , borderWidth        = myBorderWidth
       , normalBorderColor  = myNormColor
       , focusedBorderColor = myFocusColor
-      , logHook = dynamicLogWithPP . filterOutWsPP [scratchpadWorkspaceTag] $ xmobarPP
-            -- the following variables beginning with 'pp' are settings for xmobar.
-            { ppOutput = \x -> hPutStrLn xmproc0 x                          -- xmobar on monitor 1
-                            >> hPutStrLn xmproc1 x                          -- xmobar on monitor 2
-                            -- >> hPutStrLn xmproc2 x                          -- xmobar on monitor 3
-                            -- Current workspace
-            , ppCurrent = xmobarColor color02 "" . wrap
-                          ("<box type=Bottom width=2 mb=2 color=" ++ color02 ++ ">") "</box>"
-              -- Visible but not current workspace
-            , ppVisible = xmobarColor color02 "" . clickable
-              -- Hidden workspace
-            , ppHidden = xmobarColor color03 "" . wrap
-                          ("<box type=Top width=2 mt=2 color=" ++ color03 ++ ">") "</box>" . clickable
-              -- Hidden workspaces (no windows)
-            , ppHiddenNoWindows = xmobarColor color01 ""  . clickable
-              -- Title of active window
-            , ppTitle = xmobarColor color01 "" . shorten 43
-              -- Separator character
-            , ppSep =  "<fc=" ++ color04 ++ "> <fn=1>|</fn> </fc>"
-            , ppExtras  = [windowCount]                                     -- # of windows current workspace
-            , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]                    -- order of things in xmobar
-            }
       } `additionalKeysP` myKeys
 
 -- ------------
 -- My functions
 -- ------------
-
-windowCount :: X (Maybe String)
-windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
-
-clickable :: [Char] -> [Char]
-clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
-    where i = fromJust $ M.lookup ws myWorkspaceIndices
-
-------------------------------------------------------------------------------------------
 
 -- Get focused screeen to spawm Rofi
 reverseList :: [Int] -> [Int]

@@ -18,7 +18,7 @@
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/15.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/16.yaml
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -30,14 +30,18 @@ resolver:
 #   - auto-update
 #   - wai
 packages:
-- xmobar-git
-- xmonad-git
-- xmonad-contrib-git
+- xmonad
+- xmonad-contrib
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
-# extra-deps:
+extra-deps:
+- glib-0.13.8.2@sha256:f44b829e741b3c3244d523f60b058701dfc067ff64c2ba61d43be4cccfc2663d,3156
+- gtk3-0.15.7@sha256:d2c599bbed3b7965956db564c5e2bccf4b42b7123628b663901da7da5c90c421,19495
+- cairo-0.13.8.2@sha256:ef1709c3c4d2c6d68a9a51d9f220dccc0745f6468d2d0868c15a7ecdf8f325a1,4078
+- gio-0.13.8.2@sha256:95a9cc25976992aea0c4d0482b4f98ef165eca9ec2ccd553e2ce646bb0d8c66d,3136
+- pango-0.13.8.2@sha256:d4057ebddade4cde3e25d7755b5e030e7a7e56fe7365afd37916a7bba46d3fd9,3917
 # - acme-missiles-0.3
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
@@ -67,11 +71,3 @@ packages:
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
-
-extra-deps:
-  - netlink-1.1.1.0@sha256:d83424b5ba9921191449e4b1f53c7cba7f4375f2c55a9b737c77e982e1f40d00,3689
-
-flags:
-  xmobar:
-    all_extensions: true
-

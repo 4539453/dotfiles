@@ -18,3 +18,7 @@
 	merge = refs/heads/main
 [filter "remove-token"]
 	clean = "sed -e 's/^token.*//'"
+[submodule "home/dl2718/.config/xmonad/xmonad"]
+	url = https://github.com/xmonad/xmonad.git
+[submodule "home/dl2718/.config/xmonad/xmonad-contrib"]
+	url = https://github.com/xmonad/xmonad-contrib.git
