@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+pactl set-source-mute 0 toggle
+
+status=$(pactl get-source-mute 0)
+
+if [ "$status" = 'Mute: yes' ]; then
+  notify-send '🎤 muted' -t 2000 \
+    -h string:x-canonical-private-synchronous:microphone-status
+fi
+if [ "$status" = 'Mute: no' ]; then
+  notify-send "🎤 let's talk" -t 2000 \
+    -h string:x-canonical-private-synchronous:microphone-status
+fi
