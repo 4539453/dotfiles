@@ -1,8 +1,6 @@
 -- Base
 import XMonad
 import System.Directory
-import System.IO (hPutStrLn)
-import System.Exit (exitSuccess)
 import qualified XMonad.StackSet as W
 
 -- Actions
@@ -69,8 +67,6 @@ import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(T
 import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 
 -- Utilities
-import XMonad.Util.ClickableWorkspaces
-import XMonad.Util.Dmenu
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
@@ -86,23 +82,20 @@ myTerminal :: String
 myTerminal = "alacritty "    -- Sets default terminal
 
 myBrowser :: String
-myBrowser = "firefox "  -- Sets browser
+myBrowser = "firefox "       -- Sets browser
 
 myBorderWidth :: Dimension
-myBorderWidth = 2           -- Sets border width for windows
+myBorderWidth = 2            -- Sets border width for windows
 
 myWorkspaces :: [[Char]]
 myWorkspaces =  [" dev ", " www ", " doc ", " sys ", " vbox ",
                 " chat ", " mus ", " vid ", " gfx "]
 
-myWorkspaceIndices :: M.Map [Char] Integer
-myWorkspaceIndices = M.fromList $ zip myWorkspaces [1..] -- (,) == \x y -> (x,y)
-
 myNormColor :: String
-myNormColor   = colorBack   -- Border color of normal windows
+myNormColor   = colorBack    -- Border color of normal windows
 
 myFocusColor :: String
-myFocusColor  = color05   -- Border color of focused windows
+myFocusColor  = color05      -- Border color of focused windows
 
 -- setting colors for tabs layout and tabs sublayout.
 myTabTheme = def
@@ -117,13 +110,11 @@ myTabTheme = def
 
 myStartupHook :: X ()
 myStartupHook = do
---   spawn "killall conky"
---   spawn "killall trayer"
-
+  spawnOnce "xbindkeys"
   spawn ("wallpaper " ++ colorScheme ++ "-solid")
   spawn "picom --experimental-backends --config $HOME/.config/picom/picom.conf"
 --   spawn ("conky -c $HOME/.config/conky/" ++ colorScheme ++ ".conkyrc")
---   spawn ("trayer --edge top --align right --widthtype request --padding 20 --SetDockType true --SetPartialStrut true --expand true --monitor 0 --transparent true --alpha $(expr 255 - $(cat ~/.config/xmobar/" ++ colorScheme ++ "-main-xmobarrc | grep alpha | cut -d = -f2 | cut -d ' ' -f2)) " ++ colorTrayer ++ " --height 27 --iconspacing 4")
+--   spawn ("tray --edge top --align right --widthtype request --padding 20 --SetDockType true --SetPartialStrut true --expand true --monitor 0 --transparent true --alpha $(expr 255 - $(cat ~/.config/xmobar/" ++ colorScheme ++ "-main-xmobarrc | grep alpha | cut -d = -f2 | cut -d ' ' -f2)) " ++ colorTop ++ " --height 27 --iconspacing 4")
 
   setWMName "LG3D"
 
@@ -144,6 +135,39 @@ spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
     , gs_originFractY = 0.5
     , gs_font         = myFont
     }
+
+--------------------------------------------------------------------------------
+
+myScratchPads :: [NamedScratchpad]
+myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "top" spawnTop findTop manageTop
+                -- , NS "calculator" spawnCalc findCalc manageCalc
+                ]
+  where
+    spawnTerm  = myTerminal ++ " -t scratchpad"
+    findTerm   = title =? "scratchpad"
+    manageTerm = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.5
+                 w = 0.5
+                 t = 0.95 -h
+                 l = 0.95 -w
+    spawnTop  = myTerminal ++ " -t top-scratchpad" ++ " -e btop"
+    findTop   = title =? "top-scratchpad"
+    manageTop = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.67
+                 w = 0.56
+                 t = 0.98 -h
+                 l = 0.98 -w
+    -- spawnCalc  = "qalculate-gtk"
+    -- findCalc   = className =? "Qalculate-gtk"
+    -- manageCalc = customFloating $ W.RationalRect l t w h
+    --            where
+    --              h = 0.5
+    --              w = 0.4
+    --              t = 0.75 -h
+    --              l = 0.70 -w
 
 --------------------------------------------------------------------------------
 
@@ -282,7 +306,7 @@ myManageHook = composeAll
     , className =? "Gimp-2.10"                --> doFloat
     , className =? "Gimp-2.10"                --> doShift " gfx "
     , className =? "krita"                    --> doShift " gfx "
-    ]
+    ] <+> namedScratchpadManageHook myScratchPads
 
 -- ----------
 -- START_KEYS
@@ -311,12 +335,16 @@ myKeys =
     , ("M-t", withFocused $ windows . W.sink)  -- Push floating window back to tile
     , ("M-S-t", sinkAll)                       -- Push ALL floating windows to tile
 
+    -- Strachpads
+    ,("M-a", namedScratchpadAction myScratchPads "terminal")
+    ,("M-s", namedScratchpadAction myScratchPads "top")
+
     -- KB_GROUP Grid Select (CTR-g followed by a key)
     , ("C-g g", spawnSelected' myAppGrid)           -- grid select favorite apps
     , ("C-g r", spawn (myTerminal ++ "-c lf"))
-    , ("C-g f", spawn ("pcmanfm"))
-    , ("C-g b", spawn ("obsidian"))
-    , ("C-g c", spawn ("code"))
+    , ("C-g f", spawn "pcmanfm")
+    , ("C-g b", spawn "obsidian")
+    , ("C-g c", spawn "code")
     , ("C-g t", spawn "telegram-desktop")
 
 
