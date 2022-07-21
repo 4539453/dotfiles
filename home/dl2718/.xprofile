@@ -1,10 +1,8 @@
-<< COMMENT
 xsetroot -cursor_name left_ptr &
+setxkbmap -layout us,ru  -option grp:caps_toggle,compose:ralt && sxhkd &
 layout-auto &
-lxsession &
-xscreensaver -no-splash &
-nm-applet &
-flameshot &
-
+dunst -conf $HOME/.config/dunst/dunstrc &
+cbatticon &
+copyq &
 # xflux -l 55.79 -g 37.71 &
-COMMENT
+
