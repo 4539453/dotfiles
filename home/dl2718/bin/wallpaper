@@ -5,7 +5,9 @@ set -eu -o pipefail
 colorscheme="${1:-1}"
 
 if [ "$colorscheme" == "light-pics" ]; then
-  feh  --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/light/^^.jpg --bg-fill $HOME/Pictures/Wallpapers/light/^_^.jpg
+  feh  --no-fehbg \
+       --bg-fill $HOME/Pictures/Wallpapers/light/^^.jpg \
+       --bg-fill $HOME/Pictures/Wallpapers/light/^_^.jpg
 
 elif [ "$colorscheme" == "light-solid" ]; then
   hsetroot -solid '#997379'
