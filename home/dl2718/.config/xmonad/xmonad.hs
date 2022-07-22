@@ -110,13 +110,26 @@ myTabTheme = def
 
 myStartupHook :: X ()
 myStartupHook = do
-  spawnOnce "xbindkeys"
   spawn ("wallpaper " ++ colorScheme ++ "-solid")
-  spawn "picom --experimental-backends --config $HOME/.config/picom/picom.conf"
---   spawn ("conky -c $HOME/.config/conky/" ++ colorScheme ++ ".conkyrc")
---   spawn ("tray --edge top --align right --widthtype request --padding 20 --SetDockType true --SetPartialStrut true --expand true --monitor 0 --transparent true --alpha $(expr 255 - $(cat ~/.config/xmobar/" ++ colorScheme ++ "-main-xmobarrc | grep alpha | cut -d = -f2 | cut -d ' ' -f2)) " ++ colorTop ++ " --height 27 --iconspacing 4")
-
+  spawnOnce "picom --experimental-backends --config $HOME/.config/picom/picom.conf"
   setWMName "LG3D"
+
+--------------------------------------------------------------------------------
+
+-- Custom hook for screen (xrandr) configuration changes.
+-- https://hackage.haskell.org/package/xmonad-contrib-0.17.0/docs/XMonad-Hooks-Rescreen.html
+myRandrChangeHook :: X ()
+myRandrChangeHook = do
+  spawn "layout-auto"
+
+myAfterRescreenHook :: X ()
+myAfterRescreenHook = do
+  spawn ("wallpaper " ++ colorScheme ++ "-solid")
+
+rescreenCfg = def{
+  afterRescreenHook = myAfterRescreenHook,
+  randrChangeHook = myRandrChangeHook
+}
 
 --------------------------------------------------------------------------------
 
@@ -139,8 +152,10 @@ spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
 --------------------------------------------------------------------------------
 
 myScratchPads :: [NamedScratchpad]
-myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+myScratchPads = [
+                  NS "terminal" spawnTerm findTerm manageTerm
                 , NS "top" spawnTop findTop manageTop
+                , NS "telegram" spawnTelegram findTelegram manageTelegram
                 -- , NS "calculator" spawnCalc findCalc manageCalc
                 ]
   where
@@ -160,6 +175,14 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
                  w = 0.56
                  t = 0.98 -h
                  l = 0.98 -w
+    spawnTelegram  = "telegram-desktop"
+    findTelegram   = className =? "TelegramDesktop"
+    manageTelegram = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.5
+                 w = 0.3
+                 t = 0.04
+                 l = 0.84 -w
     -- spawnCalc  = "qalculate-gtk"
     -- findCalc   = className =? "Qalculate-gtk"
     -- manageCalc = customFloating $ W.RationalRect l t w h
@@ -168,23 +191,6 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
     --              w = 0.4
     --              t = 0.75 -h
     --              l = 0.70 -w
-
---------------------------------------------------------------------------------
-
--- Custom hook for screen (xrandr) configuration changes.
--- https://hackage.haskell.org/package/xmonad-contrib-0.17.0/docs/XMonad-Hooks-Rescreen.html
-myRandrChangeHook :: X ()
-myRandrChangeHook = do
-  spawn "layout-auto"
-
-myAfterRescreenHook :: X ()
-myAfterRescreenHook = do
-  spawn ("wallpaper " ++ colorScheme ++ "-solid")
-
-rescreenCfg = def{
-  afterRescreenHook = myAfterRescreenHook,
-  randrChangeHook = myRandrChangeHook
-}
 
 --------------------------------------------------------------------------------
 
@@ -338,6 +344,7 @@ myKeys =
     -- Strachpads
     ,("M-a", namedScratchpadAction myScratchPads "terminal")
     ,("M-s", namedScratchpadAction myScratchPads "top")
+    ,("M-z", namedScratchpadAction myScratchPads "telegram")
 
     -- KB_GROUP Grid Select (CTR-g followed by a key)
     , ("C-g g", spawnSelected' myAppGrid)           -- grid select favorite apps
@@ -386,16 +393,16 @@ myKeys =
     , ("M-v", spawn ("copyq show"))
 
     -- KB_GROUP PrtSc
-    , ("S-<Print>", spawn ("flameshot full -c -p $HOME/Pictures"))
-    , ("<Print>", spawn ("flameshot gui"))
+    , ("<Print>", spawn ("screenshot-selection"))
 
     -- KB_GROUP Fn Keys
     , ("<XF86AudioPlay>", spawn "playerctl play-pause")
     , ("<XF86AudioNext>", spawn "playerctl next")
     , ("<XF86AudioPrev>", spawn "playerctl previous")
-    , ("<XF86AudioMute>", spawn "amixer set Master toggle")
-    , ("<XF86AudioLowerVolume>", spawn "amixer set Master 1%-")
-    , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 1%+")
+    , ("<XF86AudioMute>", spawn "pactl set-sink-mute 0 toggle")
+    , ("<XF86AudioLowerVolume>", spawn "pamixer -ud 3")
+    , ("<XF86AudioRaiseVolume>", spawn "pamixer -ui 3")
+    , ("M--", spawn "microphone-toggle")
     -- , ("<XF86Display>", spawn "")
   ]
 
