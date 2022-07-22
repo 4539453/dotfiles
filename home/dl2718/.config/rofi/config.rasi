@@ -1,6 +1,7 @@
 /** Basic config file **/
 
 configuration {
+    modi: "window,drun";
     font:                       "Source Code Pro 14";
     // bw:                      0;
     fixed-num-lines:            true;
@@ -28,4 +29,5 @@ configuration {
     kb-mode-previous:           "Shift+Left,Control+Shift+Tab,Control+h";
     kb-remove-char-back:        "BackSpace";
 }
+
 @theme "dark"
