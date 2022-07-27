@@ -1,5 +1,5 @@
 xsetroot -cursor_name left_ptr &
-setxkbmap -layout us,ru  -option grp:caps_toggle,compose:ralt && sxhkd &
+xkbcomp $HOME/.config/xkb/xkbrc $DISPLAY &
 layout-auto &
 dunst -conf $HOME/.config/dunst/dunstrc &
 cbatticon &
