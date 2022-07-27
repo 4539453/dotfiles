@@ -9,5 +9,5 @@ Target = usr/lib/modules/*/vmlinuz
 Depends = rsync
 Description = Backing up /boot...
 When = PostTransaction
-Exec = /usr/bin/rsync -a --delete /boot /.bootbackup
+Exec = /usr/bin/rsync -a --delete /boot /boot.backup
 
