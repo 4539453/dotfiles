@@ -5,7 +5,8 @@ xkb_keymap {
     xkb_geometry  { include "pc(pc105)" };
     xkb_symbols "my"  {
         include "pc+us+ru:2+inet(evdev)"
-        include "compose(caps)"
+        include "compose(rctrl)"
+	include "capslock(grouplock)"
 
         key <RALT> {
             [ ISO_First_Group, ISO_Last_Group ]
