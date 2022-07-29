@@ -11,16 +11,12 @@
 [yadm]
   managed = true
 [remote "origin"]
-  url = git@github.com:4539453/dotfiles.new.git
+  url = git@github.com:4539453/dotfiles.git
   fetch = +refs/heads/*:refs/remotes/origin/*
 [branch "main"]
   remote = origin
   merge = refs/heads/main
 [filter "remove-token"]
   clean = "sed -e 's/^token.*//'"
-[submodule "xmonad-contrib"]
-  url = git://github.com/xmonad/xmonad-contrib.git
-  path = home/dl2718/.config/xmonad/xmonad-contrib
-[submodule "xmonad"]
-  url = git://github.com/xmonad/xmonad.git
-  path = home/dl2718/.config/xmonad/xmonad
+[lfs]
+	repositoryformatversion = 0
