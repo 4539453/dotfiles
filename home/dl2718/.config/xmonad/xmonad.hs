@@ -394,6 +394,8 @@ myKeys =
 
     -- KB_GROUP PrtSc
     , ("<Print>", spawn ("screenshot-selection"))
+    , ("C-<Print>", spawn ("screenshot-selection shadow"))
+    , ("S-<Print>", spawn ("screenshot-selection full"))
 
     -- KB_GROUP Fn Keys
     , ("<XF86AudioPlay>", spawn "playerctl play-pause")
