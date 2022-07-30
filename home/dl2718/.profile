@@ -14,6 +14,9 @@ fi
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 
+## emacs
+export PATH=$HOME/.emacs.d/bin:$PATH
+
 # VARS
 
 ## GnuPG
